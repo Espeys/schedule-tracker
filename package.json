@@ -12,7 +12,15 @@
     "format": "oxfmt src/"
   },
   "dependencies": {
+    "@fullcalendar/vue3": "^7.0.2",
+    "@heroicons/vue": "^2.2.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "@vueuse/core": "^14.4.0",
+    "air-datepicker": "^3.6.0",
+    "dayjs": "^1.11.21",
     "pinia": "^4.0.2",
+    "tailwindcss": "^4.3.3",
+    "temporal-polyfill": "^1.0.3",
     "vue": "rc",
     "vue-router": "^5.2.0"
   },
@@ -21,6 +29,7 @@
     "@types/node": "^24.13.3",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vue/tsconfig": "^0.9.1",
+    "daisyui": "^5.7.16",
     "npm-run-all2": "^9.0.2",
     "oxfmt": "^0.59.0",
     "typescript": "~6.0.0",

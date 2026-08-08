@@ -1,0 +1,52 @@
+@import 'tailwindcss';
+@import 'air-datepicker/air-datepicker.css';
+@plugin "daisyui" {
+  themes: light --default;
+}
+
+:root {
+  font-family: 'Inter', sans-serif;
+}
+
+:root,
+:root:has(input.theme-controller[value='light']:checked),
+[data-theme='light'] {
+  --color-primary: #33b679;
+  --color-primary-content: #0b1a12;
+  --color-on-primary: #ffffff;
+  --color-secondary: #206adf;
+  --color-secondary-content: #ffffff;
+  --color-on-secondary: #ffffff;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  opacity: 1;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.air-datepicker {
+  --adp-font-family: 'Inter', sans-serif;
+  --adp-width: 17rem;
+  --adp-border-radius: 1.5rem;
+  --adp-border-color-inline: rgba(32, 106, 223, 0.12);
+  --adp-background-color-hover: rgba(32, 106, 223, 0.08);
+  --adp-background-color-active: rgba(32, 106, 223, 0.12);
+  --adp-accent-color: var(--color-secondary);
+  --adp-color-current-date: var(--color-secondary);
+  --adp-nav-arrow-color: var(--color-secondary);
+  --adp-day-name-color: rgba(17, 24, 39, 0.7);
+  --adp-day-name-color-hover: var(--color-secondary);
+  --adp-cell-background-color-selected: var(--color-secondary);
+  --adp-cell-background-color-selected-hover: #1959c5;
+  --adp-cell-background-color-in-range: rgba(32, 106, 223, 0.12);
+  --adp-cell-background-color-in-range-hover: rgba(32, 106, 223, 0.18);
+  --adp-cell-border-color-in-range: rgba(32, 106, 223, 0.18);
+  --adp-btn-color: var(--color-secondary);
+  box-shadow: 0 18px 48px rgba(17, 24, 39, 0.08);
+}
+
+.steps .step.step-primary::after {
+  color: var(--color-on-primary) !important;
+}
