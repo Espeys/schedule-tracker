@@ -1,8 +1,8 @@
 <template>
   <button
     type="button"
-    class="btn rounded-sm px-8 text-lg font-medium"
-    :class="[variantClass, { 'w-full': fullWidth }]"
+    class="btn text-xs font-semibold outline-none"
+    :class="[sizeClass, variantClass, { 'w-full': fullWidth }]"
     :disabled="disabled"
   >
     <slot />
@@ -16,19 +16,32 @@ const props = withDefaults(
   defineProps<{
     disabled?: boolean
     fullWidth?: boolean
-    variant?: 'primary' | 'secondary' | 'text'
+    size?: 'sm' | 'md'
+    variant?: 'icon' | 'primary' | 'secondary' | 'text'
   }>(),
   {
     disabled: false,
     fullWidth: false,
+    size: 'md',
     variant: 'primary',
   },
 )
 
+const sizeClass = computed(() => {
+  switch (props.size) {
+    case 'sm':
+      return 'btn-sm rounded-sm'
+    default:
+      return 'rounded-sm'
+  }
+})
+
 const variantClass = computed(() => {
   switch (props.variant) {
+    case 'icon':
+      return 'btn-ghost min-w-0 px-3 text-base-content shadow-none'
     case 'secondary':
-      return 'btn-outline'
+      return 'btn-outline border-[#707070]'
     case 'text':
       return 'btn-ghost text-base-content shadow-none'
     default:

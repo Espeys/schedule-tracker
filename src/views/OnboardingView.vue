@@ -15,7 +15,6 @@
             <OnboardingStepTwo
               v-show="currentStep === 1"
               :model-value="cycleStartDate"
-              :min-date="today"
               @update:model-value="cycleStartDate = $event"
             />
 
@@ -52,45 +51,32 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 import AppButton from '@/components/generic/AppButton.vue'
 import AppTimeline from '@/components/generic/AppTimeline.vue'
 import OnboardingStepOne from '@/components/view/onboarding/OnboardingStepOne.vue'
 import OnboardingStepThree from '@/components/view/onboarding/OnboardingStepThree.vue'
 import OnboardingStepTwo from '@/components/view/onboarding/OnboardingStepTwo.vue'
+import { useOnboarding } from '@/composables/useOnboarding'
 
-const steps = ['Cycle Length', 'Cycle Days', "Let's go!"]
-const currentStep = ref(0)
-const cycleLength = ref<number | ''>(1)
-const cycleStartDate = ref<Date | null>(new Date())
-const today = new Date('2026-08-08T00:00:00')
+const router = useRouter()
+const {
+  canGoNext,
+  currentStep,
+  cycleLength,
+  cycleStartDate,
+  finishOnboarding: saveOnboardingState,
+  goToNextStep,
+  goToPreviousStep,
+  steps,
+} = useOnboarding()
 
-const canGoNext = computed(() => {
-  if (currentStep.value === 0) {
-    return cycleLength.value !== '' && cycleLength.value > 0
-  }
-
-  if (currentStep.value === 1) {
-    return cycleStartDate.value !== null
-  }
-
-  return false
-})
-
-const goToNextStep = () => {
-  if (!canGoNext.value) {
+const finishOnboarding = () => {
+  if (!saveOnboardingState()) {
     return
   }
 
-  currentStep.value = Math.min(currentStep.value + 1, steps.length - 1)
-}
-
-const goToPreviousStep = () => {
-  currentStep.value = Math.max(currentStep.value - 1, 0)
-}
-
-const finishOnboarding = () => {
-  location.reload()
+  void router.push({ name: 'calendar' })
 }
 </script>
