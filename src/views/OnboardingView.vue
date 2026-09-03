@@ -59,6 +59,8 @@ import OnboardingStepOne from '@/components/view/onboarding/OnboardingStepOne.vu
 import OnboardingStepThree from '@/components/view/onboarding/OnboardingStepThree.vue'
 import OnboardingStepTwo from '@/components/view/onboarding/OnboardingStepTwo.vue'
 import { useOnboarding } from '@/composables/useOnboarding'
+import { useAuth } from '@/services/auth-service'
+import { saveOnboardingProfile } from '@/services/profile-service'
 
 const router = useRouter()
 const {
@@ -71,12 +73,17 @@ const {
   goToPreviousStep,
   steps,
 } = useOnboarding()
+const { currentUser } = useAuth()
 
-const finishOnboarding = () => {
-  if (!saveOnboardingState()) {
+const finishOnboarding = async () => {
+  const onboarding = saveOnboardingState()
+  const user = currentUser.value
+
+  if (!onboarding || !user) {
     return
   }
 
-  void router.push({ name: 'calendar' })
+  await saveOnboardingProfile(user.uid, onboarding)
+  await router.push({ name: 'calendar' })
 }
 </script>

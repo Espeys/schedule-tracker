@@ -1,63 +1,26 @@
 import { computed, ref } from 'vue'
 
+import { MAX_CYCLE_LENGTH } from '@/services/onboarding-data'
 import type { OnboardingData } from '@/services/models/OnboardingData'
+import {
+  clearStoredOnboarding,
+  readStoredOnboarding,
+  saveStoredOnboarding,
+} from '@/services/onboarding-storage'
+import { useOnboardingProfile } from '@/services/profile-service'
 
-const ONBOARDING_STORAGE_KEY = 'schedule-tracker.onboarding'
 const ONBOARDING_STEPS = ['Cycle Length', 'Cycle Days', "Let's go!"] as const
-const MAX_CYCLE_LENGTH = 6
 
 interface SaveOnboardingInput {
   cycleLength: number
   cycleStartDate: Date
 }
 
-const isValidOnboardingData = (value: unknown): value is OnboardingData => {
-  if (!value || typeof value !== 'object') {
-    return false
-  }
-
-  const candidate = value as Record<string, unknown>
-
-  return (
-    typeof candidate.cycleLength === 'number' &&
-    Number.isFinite(candidate.cycleLength) &&
-    candidate.cycleLength > 0 &&
-    candidate.cycleLength <= MAX_CYCLE_LENGTH &&
-    typeof candidate.cycleStartDate === 'string' &&
-    !Number.isNaN(new Date(candidate.cycleStartDate).getTime())
-  )
-}
-
-const readStoredOnboarding = (): OnboardingData | null => {
-  if (typeof window === 'undefined') {
-    return null
-  }
-
-  const rawValue = window.localStorage.getItem(ONBOARDING_STORAGE_KEY)
-
-  if (!rawValue) {
-    return null
-  }
-
-  try {
-    const parsedValue = JSON.parse(rawValue) as unknown
-
-    if (!isValidOnboardingData(parsedValue)) {
-      window.localStorage.removeItem(ONBOARDING_STORAGE_KEY)
-      return null
-    }
-
-    return parsedValue
-  } catch {
-    window.localStorage.removeItem(ONBOARDING_STORAGE_KEY)
-    return null
-  }
-}
-
 export const hasOnboardingData = (): boolean => readStoredOnboarding() !== null
 
 export function useOnboarding() {
-  const onboardingData = ref<OnboardingData | null>(readStoredOnboarding())
+  const onboardingProfile = useOnboardingProfile()
+  const onboardingData = computed(() => onboardingProfile.value ?? readStoredOnboarding())
   const steps = [...ONBOARDING_STEPS]
   const currentStep = ref(0)
   const cycleLength = ref<number | ''>(1)
@@ -66,9 +29,7 @@ export function useOnboarding() {
   const canGoNext = computed(() => {
     if (currentStep.value === 0) {
       return (
-        cycleLength.value !== '' &&
-        cycleLength.value > 0 &&
-        cycleLength.value <= MAX_CYCLE_LENGTH
+        cycleLength.value !== '' && cycleLength.value > 0 && cycleLength.value <= MAX_CYCLE_LENGTH
       )
     }
 
@@ -80,7 +41,6 @@ export function useOnboarding() {
   })
 
   const loadOnboarding = () => {
-    onboardingData.value = readStoredOnboarding()
     return onboardingData.value
   }
 
@@ -90,15 +50,12 @@ export function useOnboarding() {
       cycleStartDate: cycleStartDate.toISOString(),
     }
 
-    window.localStorage.setItem(ONBOARDING_STORAGE_KEY, JSON.stringify(nextValue))
-    onboardingData.value = nextValue
-
+    saveStoredOnboarding(nextValue)
     return nextValue
   }
 
   const clearOnboarding = () => {
-    window.localStorage.removeItem(ONBOARDING_STORAGE_KEY)
-    onboardingData.value = null
+    clearStoredOnboarding()
   }
 
   const goToNextStep = () => {
