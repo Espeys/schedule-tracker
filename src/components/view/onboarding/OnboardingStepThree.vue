@@ -9,7 +9,7 @@
 
       <div class="flex flex-col items-center gap-4 text-center">
         <h1 class="text-4xl font-bold text-secondary">We&apos;re all set!</h1>
-        <p class="max-w-2xl text-lg leading-8">
+        <p class="max-w-2xl leading-8">
           Your scheduling workspace has been prepared. Continue to start creating class schedules,
           managing events, and organizing your calendar.
         </p>

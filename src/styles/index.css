@@ -11,10 +11,10 @@
 :root,
 :root:has(input.theme-controller[value='light']:checked),
 [data-theme='light'] {
-  --color-primary: #33b679;
-  --color-primary-content: #0b1a12;
+  --color-primary: #1e3a5f;
+  --color-primary-content: #ffffff;
   --color-on-primary: #ffffff;
-  --color-secondary: #206adf;
+  --color-secondary: #16a34a;
   --color-secondary-content: #ffffff;
   --color-on-secondary: #ffffff;
 }

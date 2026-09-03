@@ -11,6 +11,7 @@
     <AppInputNumber
       :model-value="modelValue"
       :min="1"
+      :max="6"
       caption="day/s per cycle"
       @update:model-value="emit('update:modelValue', $event)"
     />

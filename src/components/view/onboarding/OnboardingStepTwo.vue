@@ -12,7 +12,6 @@
       <AppDatePicker
         :model-value="modelValue"
         placeholder="Pick a date"
-        :min-date="minDate"
         fit-calendar
         @update:model-value="emit('update:modelValue', $event)"
       />
@@ -24,7 +23,6 @@
 import AppDatePicker from '@/components/generic/AppDatePicker.vue'
 
 defineProps<{
-  minDate: Date
   modelValue: Date | null
 }>()
 
