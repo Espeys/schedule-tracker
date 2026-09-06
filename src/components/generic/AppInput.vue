@@ -15,10 +15,13 @@
       :placeholder="placeholder"
       :disabled="disabled"
       :readonly="readonly"
+      :aria-invalid="Boolean(error)"
+      :aria-describedby="error ? errorMessageId : undefined"
       class="app-input input w-full focus:outline-none"
       :class="{
         'pl-12': hasPrepend,
         'pr-12': closable && hasValue,
+        'input-error': error,
       }"
       v-bind="$attrs"
       @input="handleInput"
@@ -34,12 +37,16 @@
       <XMarkIcon class="size-5" aria-hidden="true" />
       <span class="sr-only">Clear input</span>
     </button>
+
+    <p v-if="error" :id="errorMessageId" class="mt-1 text-sm text-error" role="alert">
+      {{ error }}
+    </p>
   </div>
 </template>
 
 <script setup lang="ts">
 import { XMarkIcon } from '@heroicons/vue/24/outline'
-import { computed, ref, useSlots } from 'vue'
+import { computed, ref, useId, useSlots } from 'vue'
 
 defineOptions({
   inheritAttrs: false,
@@ -51,6 +58,7 @@ const props = withDefaults(
   defineProps<{
     closable?: boolean
     disabled?: boolean
+    error?: string
     inputmode?: InputMode
     modelValue?: number | string
     placeholder?: string
@@ -60,6 +68,7 @@ const props = withDefaults(
   {
     closable: false,
     disabled: false,
+    error: '',
     inputmode: undefined,
     modelValue: undefined,
     placeholder: '',
@@ -75,6 +84,7 @@ const emit = defineEmits<{
 
 const inputElement = ref<HTMLInputElement | null>(null)
 const slots = useSlots()
+const errorMessageId = `input-error-${useId()}`
 
 const hasPrepend = computed(() => Boolean(slots.prepend))
 const hasValue = computed(() => String(props.modelValue ?? '').length > 0)
